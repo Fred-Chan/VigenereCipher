@@ -217,6 +217,13 @@
         const explanationText = document.getElementById('explanation');
         const btnStart = document.getElementById('btn-start');
 
+        // 清空 SVG 元素的子节点（SVG 不支持 innerHTML）
+        function clearSvgElement(element) {
+            while (element.firstChild) {
+                element.removeChild(element.firstChild);
+            }
+        }
+
         function handleInput(e) {
             // 仅允许字母
             e.target.value = e.target.value.toUpperCase().replace(/[^A-Z]/g, '');
@@ -225,7 +232,7 @@
 
         // 1. 绘制静态网格 (Tabula Recta)
         function drawGrid() {
-            gridGroup.innerHTML = '';
+            clearSvgElement(gridGroup);
 
             // 列头 (明文)
             for (let i = 0; i < 26; i++) {
@@ -271,9 +278,9 @@
             const pText = inputP.value;
             const kText = inputK.value;
 
-            displayP.innerHTML = '';
-            displayK.innerHTML = '';
-            displayC.innerHTML = '';
+            clearSvgElement(displayP);
+            clearSvgElement(displayK);
+            clearSvgElement(displayC);
 
             if (!pText || !kText) return;
 
@@ -316,7 +323,7 @@
             inputP.disabled = true;
             inputK.disabled = true;
             btnStart.disabled = true;
-            displayC.innerHTML = ''; // 清空上次结果
+            clearSvgElement(displayC); // 清空上次结果
 
             for (let i = 0; i < pText.length; i++) {
                 if (stopAnimation) break;
