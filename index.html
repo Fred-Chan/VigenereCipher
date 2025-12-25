@@ -207,25 +207,34 @@
         let isAnimating = false;
         let stopAnimation = false;
 
-        // DOM 元素
-        const inputP = document.getElementById('input-p');
-        const inputK = document.getElementById('input-k');
-        const displayP = document.getElementById('display-p');
-        const displayK = document.getElementById('display-k');
-        const displayC = document.getElementById('display-c');
-        const gridGroup = document.getElementById('grid-group');
-        const explanationText = document.getElementById('explanation');
-        const btnStart = document.getElementById('btn-start');
+        // DOM 元素 - 延迟获取
+        let inputP, inputK, displayP, displayK, displayC, gridGroup, explanationText, btnStart;
 
         // 初始化
-        document.addEventListener('DOMContentLoaded', () => {
+        function init() {
+            inputP = document.getElementById('input-p');
+            inputK = document.getElementById('input-k');
+            displayP = document.getElementById('display-p');
+            displayK = document.getElementById('display-k');
+            displayC = document.getElementById('display-c');
+            gridGroup = document.getElementById('grid-group');
+            explanationText = document.getElementById('explanation');
+            btnStart = document.getElementById('btn-start');
+
             drawGrid();
             updateDisplay();
 
             // 绑定输入事件
             inputP.addEventListener('input', handleInput);
             inputK.addEventListener('input', handleInput);
-        });
+        }
+
+        // 确保 DOM 加载完成后执行
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
 
         function handleInput(e) {
             // 仅允许字母
