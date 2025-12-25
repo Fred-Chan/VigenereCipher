@@ -244,7 +244,10 @@
 
         // 1. 绘制静态网格 (Tabula Recta)
         function drawGrid() {
-            gridGroup.innerHTML = '';
+            // 清空 SVG 组 - 兼容性更好的方式
+            while (gridGroup.firstChild) {
+                gridGroup.removeChild(gridGroup.firstChild);
+            }
 
             // 列头 (明文)
             for (let i = 0; i < 26; i++) {
@@ -290,9 +293,16 @@
             const pText = inputP.value;
             const kText = inputK.value;
 
-            displayP.innerHTML = '';
-            displayK.innerHTML = '';
-            displayC.innerHTML = '';
+            // 清空 SVG 组 - 兼容性更好的方式
+            while (displayP.firstChild) {
+                displayP.removeChild(displayP.firstChild);
+            }
+            while (displayK.firstChild) {
+                displayK.removeChild(displayK.firstChild);
+            }
+            while (displayC.firstChild) {
+                displayC.removeChild(displayC.firstChild);
+            }
 
             if (!pText || !kText) return;
 
@@ -335,7 +345,10 @@
             inputP.disabled = true;
             inputK.disabled = true;
             btnStart.disabled = true;
-            displayC.innerHTML = ''; // 清空上次结果
+            // 清空上次结果
+            while (displayC.firstChild) {
+                displayC.removeChild(displayC.firstChild);
+            }
 
             for (let i = 0; i < pText.length; i++) {
                 if (stopAnimation) break;
