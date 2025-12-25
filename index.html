@@ -156,7 +156,7 @@
     </div>
 
     <div class="svg-container">
-        <svg viewBox="0 0 600 720" id="cipherSvg">
+        <svg viewBox="0 0 600 750" id="cipherSvg">
             <defs>
                 <!-- 发光滤镜 -->
                 <filter id="glow">
@@ -169,7 +169,7 @@
             </defs>
 
             <!-- 背景 -->
-            <rect x="0" y="0" width="600" height="720" fill="#252526" />
+            <rect x="0" y="0" width="600" height="750" fill="#252526" />
 
             <!-- 顶部：输入显示区 -->
             <g transform="translate(50, 40)">
@@ -184,13 +184,13 @@
             <g id="grid-group" transform="translate(45, 110)"></g>
 
             <!-- 底部：结果显示区 -->
-            <g transform="translate(50, 600)">
+            <g transform="translate(50, 680)">
                 <text x="0" y="0" fill="#aaa" font-size="14" dominant-baseline="middle">密文:</text>
                 <g id="display-c" transform="translate(80, 0)"></g>
             </g>
 
             <!-- 底部：说明文字区 -->
-            <g transform="translate(300, 670)">
+            <g transform="translate(300, 730)">
                 <rect x="-250" y="-30" width="500" height="60" rx="30" fill="#333" stroke="#555" />
                 <text id="explanation" class="explanation-box" y="5">准备就绪，点击"开始加密"</text>
             </g>
@@ -218,14 +218,14 @@
         const btnStart = document.getElementById('btn-start');
 
         // 初始化
-        window.onload = () => {
+        document.addEventListener('DOMContentLoaded', () => {
             drawGrid();
             updateDisplay();
 
             // 绑定输入事件
             inputP.addEventListener('input', handleInput);
             inputK.addEventListener('input', handleInput);
-        };
+        });
 
         function handleInput(e) {
             // 仅允许字母
