@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>维吉尼亚密码交互演示</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #61dafb;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        /* 输入控制区样式 */
+        .input-group {
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 800px;
+            box-sizing: border-box;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            color: #aaa;
+        }
+
+        input {
+            background: #333;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            width: 150px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #61dafb;
+        }
+
+        .btn-group {
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        #btn-start {
+            background-color: #61dafb;
+            color: #121212;
+        }
+        #btn-start:hover { background-color: #4fa8c7; }
+        #btn-start:disabled { background-color: #444; cursor: not-allowed; }
+
+        #btn-reset {
+            background-color: #ff6347;
+            color: #fff;
+        }
+        #btn-reset:hover { background-color: #d45239; }
+
+        /* SVG 容器 */
+        .svg-container {
+            width: 100%;
+            max-width: 800px;
+            background: #1e1e1e;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            overflow: hidden;
+        }
+
+        svg {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        /* SVG 内部文字样式 */
+        .grid-text { font-size: 9px; fill: #666; transition: fill 0.2s; }
+        .header-text { font-size: 11px; fill: #aaa; font-weight: bold; }
+
+        /* 高亮样式 */
+        .highlight-row rect { fill: rgba(255, 99, 71, 0.25); } /* Key Row Red */
+        .highlight-col rect { fill: rgba(97, 218, 251, 0.25); } /* Plaintext Col Blue */
+
+        .intersection rect {
+            fill: rgba(255, 215, 0, 0.6) !important;
+            stroke: #ffd700;
+            stroke-width: 2px;
+        }
+        .intersection text { fill: #000 !important; font-weight: bold; font-size: 14px; }
+
+        .active-header { fill: #fff; font-size: 14px; }
+
+        .explanation-box {
+            font-size: 16px;
+            fill: #fff;
+            text-anchor: middle;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>维吉尼亚密码演示</h1>
+
+    <div class="input-group">
+        <div class="field">
+            <label for="input-p">明文 (Plaintext)</label>
+            <input type="text" id="input-p" value="BEBRAS" maxlength="10">
+        </div>
+        <div class="field">
+            <label for="input-k">密钥 (Key)</label>
+            <input type="text" id="input-k" value="CHINA" maxlength="10">
+        </div>
+        <div class="btn-group">
+            <button id="btn-start" onclick="startAnimation()">开始加密</button>
+            <button id="btn-reset" onclick="resetAll()">重置</button>
+        </div>
+    </div>
+
+    <div class="svg-container">
+        <svg viewBox="0 0 600 720" id="cipherSvg">
+            <defs>
+                <!-- 发光滤镜 -->
+                <filter id="glow">
+                    <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                    <feMerge>
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                </filter>
+            </defs>
+
+            <!-- 背景 -->
+            <rect x="0" y="0" width="600" height="720" fill="#252526" />
+
+            <!-- 顶部：输入显示区 -->
+            <g transform="translate(50, 40)">
+                <text x="0" y="0" fill="#aaa" font-size="14" dominant-baseline="middle">明文:</text>
+                <g id="display-p" transform="translate(80, 0)"></g>
+
+                <text x="0" y="35" fill="#aaa" font-size="14" dominant-baseline="middle">密钥:</text>
+                <g id="display-k" transform="translate(80, 35)"></g>
+            </g>
+
+            <!-- 中部：维吉尼亚方阵 -->
+            <g id="grid-group" transform="translate(45, 110)"></g>
+
+            <!-- 底部：结果显示区 -->
+            <g transform="translate(50, 600)">
+                <text x="0" y="0" fill="#aaa" font-size="14" dominant-baseline="middle">密文:</text>
+                <g id="display-c" transform="translate(80, 0)"></g>
+            </g>
+
+            <!-- 底部：说明文字区 -->
+            <g transform="translate(300, 670)">
+                <rect x="-250" y="-30" width="500" height="60" rx="30" fill="#333" stroke="#555" />
+                <text id="explanation" class="explanation-box" y="5">准备就绪，点击"开始加密"</text>
+            </g>
+        </svg>
+    </div>
+
+    <script>
+        // 全局变量
+        const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const gridSize = 20;
+        const startX = 30;
+        const startY = 30;
+
+        let isAnimating = false;
+        let stopAnimation = false;
+
+        // DOM 元素
+        const inputP = document.getElementById('input-p');
+        const inputK = document.getElementById('input-k');
+        const displayP = document.getElementById('display-p');
+        const displayK = document.getElementById('display-k');
+        const displayC = document.getElementById('display-c');
+        const gridGroup = document.getElementById('grid-group');
+        const explanationText = document.getElementById('explanation');
+        const btnStart = document.getElementById('btn-start');
+
+        // 初始化
+        window.onload = () => {
+            drawGrid();
+            updateDisplay();
+
+            // 绑定输入事件
+            inputP.addEventListener('input', handleInput);
+            inputK.addEventListener('input', handleInput);
+        };
+
+        function handleInput(e) {
+            // 仅允许字母
+            e.target.value = e.target.value.toUpperCase().replace(/[^A-Z]/g, '');
+            updateDisplay();
+        }
+
+        // 1. 绘制静态网格 (Tabula Recta)
+        function drawGrid() {
+            gridGroup.innerHTML = '';
+
+            // 列头 (明文)
+            for (let i = 0; i < 26; i++) {
+                const t = createSvgText(alphabet[i], startX + i * gridSize + gridSize/2, startY - 8, "header-text");
+                t.id = `col-head-${i}`;
+                gridGroup.appendChild(t);
+            }
+            // 行头 (密钥)
+            for (let i = 0; i < 26; i++) {
+                const t = createSvgText(alphabet[i], startX - 10, startY + i * gridSize + gridSize/2 + 1, "header-text");
+                t.id = `row-head-${i}`;
+                gridGroup.appendChild(t);
+            }
+
+            // 网格内容
+            for (let row = 0; row < 26; row++) {
+                for (let col = 0; col < 26; col++) {
+                    const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                    g.id = `cell-${row}-${col}`;
+
+                    const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                    rect.setAttribute("x", startX + col * gridSize);
+                    rect.setAttribute("y", startY + row * gridSize);
+                    rect.setAttribute("width", gridSize - 1);
+                    rect.setAttribute("height", gridSize - 1);
+                    rect.setAttribute("fill", "#2d2d2d");
+                    rect.setAttribute("rx", 2);
+
+                    const char = alphabet[(row + col) % 26];
+                    const text = createSvgText(char, startX + col * gridSize + gridSize/2, startY + row * gridSize + gridSize/2 + 1, "grid-text");
+
+                    g.appendChild(rect);
+                    g.appendChild(text);
+                    gridGroup.appendChild(g);
+                }
+            }
+        }
+
+        // 2. 更新顶部显示 (预览)
+        function updateDisplay() {
+            if (isAnimating) return;
+
+            const pText = inputP.value;
+            const kText = inputK.value;
+
+            displayP.innerHTML = '';
+            displayK.innerHTML = '';
+            displayC.innerHTML = '';
+
+            if (!pText || !kText) return;
+
+            // 渲染明文
+            for (let i = 0; i < pText.length; i++) {
+                const t = createSvgText(pText[i], i * 35, 0, "input-char");
+                t.setAttribute("font-size", "20");
+                t.setAttribute("font-weight", "bold");
+                t.setAttribute("fill", "#555");
+                t.id = `p-char-${i}`;
+                displayP.appendChild(t);
+            }
+
+            // 渲染密钥 (循环对齐)
+            for (let i = 0; i < pText.length; i++) {
+                const char = kText[i % kText.length];
+                const t = createSvgText(char, i * 35, 0, "input-char");
+                t.setAttribute("font-size", "20");
+                t.setAttribute("font-weight", "bold");
+                t.setAttribute("fill", "#555");
+                t.id = `k-char-${i}`;
+                displayK.appendChild(t);
+            }
+        }
+
+        // 3. 动画主逻辑
+        async function startAnimation() {
+            if (isAnimating) return;
+
+            const pText = inputP.value;
+            const kText = inputK.value;
+
+            if (!pText || !kText) {
+                explain("请输入明文和密钥！");
+                return;
+            }
+
+            isAnimating = true;
+            stopAnimation = false;
+            inputP.disabled = true;
+            inputK.disabled = true;
+            btnStart.disabled = true;
+            displayC.innerHTML = ''; // 清空上次结果
+
+            for (let i = 0; i < pText.length; i++) {
+                if (stopAnimation) break;
+
+                const pChar = pText[i];
+                const kChar = kText[i % kText.length];
+                const pIndex = alphabet.indexOf(pChar);
+                const kIndex = alphabet.indexOf(kChar);
+                const cChar = alphabet[(pIndex + kIndex) % 26];
+
+                // 步骤 1: 选中字符
+                explain(`步骤 ${i+1}: 取明文 '${pChar}' 和 密钥 '${kChar}'`);
+                highlightChar(`p-char-${i}`, "#61dafb"); // 蓝
+                highlightChar(`k-char-${i}`, "#ff6347"); // 红
+                await wait(800);
+
+                // 步骤 2: 高亮行列
+                explain(`在表中找到: 明文列 '${pChar}' (蓝) 和 密钥行 '${kChar}' (红)`);
+                highlightGrid(kIndex, pIndex, true);
+                await wait(1000);
+
+                // 步骤 3: 找到交点
+                explain(`两者的交点是: '${cChar}'`);
+                highlightIntersection(kIndex, pIndex, true);
+                await wait(1000);
+
+                // 步骤 4: 输出结果
+                explain(`将密文 '${cChar}' 添加到结果中`);
+                addCipherChar(i, cChar);
+                await wait(800);
+
+                // 步骤 5: 清理当前步
+                highlightGrid(kIndex, pIndex, false);
+                highlightIntersection(kIndex, pIndex, false);
+                // 变暗已处理字符
+                document.getElementById(`p-char-${i}`).setAttribute("fill", "#333");
+                document.getElementById(`k-char-${i}`).setAttribute("fill", "#333");
+                document.getElementById(`p-char-${i}`).setAttribute("filter", "");
+                document.getElementById(`k-char-${i}`).setAttribute("filter", "");
+
+                await wait(200);
+            }
+
+            if (!stopAnimation) {
+                explain("加密完成！");
+            }
+
+            isAnimating = false;
+            inputP.disabled = false;
+            inputK.disabled = false;
+            btnStart.disabled = false;
+        }
+
+        // 辅助功能函数
+        function explain(text) {
+            explanationText.textContent = text;
+        }
+
+        function highlightChar(id, color) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.setAttribute("fill", color);
+                el.setAttribute("filter", "url(#glow)");
+            }
+        }
+
+        function highlightGrid(rowIndex, colIndex, active) {
+            // 表头
+            const colHead = document.getElementById(`col-head-${colIndex}`);
+            const rowHead = document.getElementById(`row-head-${rowIndex}`);
+
+            if (active) {
+                colHead.classList.add("active-header");
+                colHead.setAttribute("fill", "#61dafb");
+                rowHead.classList.add("active-header");
+                rowHead.setAttribute("fill", "#ff6347");
+            } else {
+                colHead.classList.remove("active-header");
+                colHead.setAttribute("fill", "#aaa");
+                rowHead.classList.remove("active-header");
+                rowHead.setAttribute("fill", "#aaa");
+            }
+
+            // 整列
+            for (let r = 0; r < 26; r++) {
+                const cell = document.getElementById(`cell-${r}-${colIndex}`);
+                if (active) cell.classList.add("highlight-col");
+                else cell.classList.remove("highlight-col");
+            }
+            // 整行
+            for (let c = 0; c < 26; c++) {
+                const cell = document.getElementById(`cell-${rowIndex}-${c}`);
+                if (active) cell.classList.add("highlight-row");
+                else cell.classList.remove("highlight-row");
+            }
+        }
+
+        function highlightIntersection(rowIndex, colIndex, active) {
+            const cell = document.getElementById(`cell-${rowIndex}-${colIndex}`);
+            if (active) cell.classList.add("intersection");
+            else cell.classList.remove("intersection");
+        }
+
+        function addCipherChar(index, char) {
+            const t = createSvgText(char, index * 35, 0, "cipher-char");
+            t.setAttribute("font-size", "20");
+            t.setAttribute("font-weight", "bold");
+            t.setAttribute("fill", "#ffd700"); // 金色
+            t.setAttribute("opacity", "0");
+
+            // 动画
+            const anim = document.createElementNS("http://www.w3.org/2000/svg", "animate");
+            anim.setAttribute("attributeName", "opacity");
+            anim.setAttribute("from", "0");
+            anim.setAttribute("to", "1");
+            anim.setAttribute("dur", "0.5s");
+            anim.setAttribute("fill", "freeze");
+            t.appendChild(anim);
+
+            displayC.appendChild(t);
+        }
+
+        function resetAll() {
+            stopAnimation = true;
+            isAnimating = false;
+
+            // 恢复输入框
+            inputP.disabled = false;
+            inputK.disabled = false;
+            btnStart.disabled = false;
+
+            // 重置显示
+            updateDisplay();
+
+            // 清理网格样式
+            const highlighted = document.querySelectorAll('.highlight-row, .highlight-col, .intersection, .active-header');
+            highlighted.forEach(el => {
+                el.classList.remove('highlight-row', 'highlight-col', 'intersection', 'active-header');
+                if(el.tagName === 'text') el.setAttribute("fill", "#aaa");
+            });
+
+            explain("准备就绪，点击"开始加密"");
+        }
+
+        function createSvgText(content, x, y, className) {
+            const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            t.textContent = content;
+            t.setAttribute("x", x);
+            t.setAttribute("y", y);
+            t.setAttribute("class", className);
+            t.setAttribute("dominant-baseline", "middle");
+            t.setAttribute("text-anchor", "middle");
+            return t;
+        }
+
+        function wait(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    </script>
+</body>
+</html>
