@@ -217,16 +217,6 @@
         const explanationText = document.getElementById('explanation');
         const btnStart = document.getElementById('btn-start');
 
-        // 初始化
-        window.onload = () => {
-            drawGrid();
-            updateDisplay();
-
-            // 绑定输入事件
-            inputP.addEventListener('input', handleInput);
-            inputK.addEventListener('input', handleInput);
-        };
-
         function handleInput(e) {
             // 仅允许字母
             e.target.value = e.target.value.toUpperCase().replace(/[^A-Z]/g, '');
@@ -485,6 +475,12 @@
         function wait(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
         }
+
+        // 立即初始化（脚本在 body 末尾，DOM 已就绪）
+        drawGrid();
+        updateDisplay();
+        inputP.addEventListener('input', handleInput);
+        inputK.addEventListener('input', handleInput);
     </script>
 </body>
 </html>
