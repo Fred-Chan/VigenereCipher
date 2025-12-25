@@ -20,15 +20,15 @@
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
         }
 
         h1 {
             text-align: center;
             color: #00d9ff;
-            margin-bottom: 30px;
-            font-size: 2rem;
+            margin-bottom: 24px;
+            font-size: 1.8rem;
             text-shadow: 0 0 20px rgba(0, 217, 255, 0.3);
         }
 
@@ -36,15 +36,15 @@
         .input-section {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 24px;
+            padding: 20px;
+            margin-bottom: 20px;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .input-row {
             display: flex;
-            gap: 20px;
+            gap: 16px;
             flex-wrap: wrap;
             align-items: flex-end;
         }
@@ -56,15 +56,15 @@
 
         .input-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             color: #aaa;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .input-group input {
             width: 100%;
-            padding: 12px 16px;
-            font-size: 18px;
+            padding: 10px 14px;
+            font-size: 16px;
             font-family: 'Courier New', monospace;
             letter-spacing: 3px;
             text-transform: uppercase;
@@ -82,30 +82,37 @@
 
         .btn-group {
             display: flex;
-            gap: 10px;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
         button {
-            padding: 12px 24px;
-            font-size: 16px;
+            padding: 10px 18px;
+            font-size: 14px;
             font-weight: 600;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s;
+            white-space: nowrap;
         }
 
-        .btn-start {
+        .btn-auto {
             background: linear-gradient(135deg, #00d9ff, #0099cc);
             color: #000;
         }
 
-        .btn-start:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(0, 217, 255, 0.4);
+        .btn-step {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: #fff;
         }
 
-        .btn-start:disabled {
+        .btn-auto:hover, .btn-step:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 217, 255, 0.3);
+        }
+
+        .btn-auto:disabled, .btn-step:disabled {
             background: #444;
             cursor: not-allowed;
             transform: none;
@@ -121,36 +128,46 @@
             background: rgba(255, 99, 71, 1);
         }
 
-        /* 显示区域 */
+        /* 显示区域 - 横向排列 */
         .display-section {
             background: rgba(0, 0, 0, 0.3);
             border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 24px;
+            padding: 20px;
+            margin-bottom: 20px;
         }
 
-        .char-display {
+        .char-row {
             display: flex;
-            gap: 8px;
-            margin-bottom: 16px;
             align-items: center;
-            min-height: 50px;
+            margin-bottom: 12px;
+            min-height: 48px;
         }
 
-        .char-display-label {
-            width: 60px;
+        .char-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .char-row-label {
+            width: 50px;
             color: #888;
-            font-size: 14px;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .char-boxes {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
         }
 
         .char-box {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: 'Courier New', monospace;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             border-radius: 6px;
             transition: all 0.3s;
@@ -175,13 +192,18 @@
         }
 
         .char-box.active {
-            transform: scale(1.2);
+            transform: scale(1.15);
             border-color: currentColor;
-            box-shadow: 0 0 15px currentColor;
+            box-shadow: 0 0 12px currentColor;
         }
 
         .char-box.done {
             opacity: 0.4;
+        }
+
+        .char-box.placeholder {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
         }
 
         /* 表格区域 */
@@ -189,7 +211,7 @@
             background: rgba(0, 0, 0, 0.3);
             border-radius: 16px;
             padding: 16px;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             overflow-x: auto;
         }
 
@@ -197,12 +219,12 @@
             border-collapse: collapse;
             margin: 0 auto;
             font-family: 'Courier New', monospace;
-            font-size: 12px;
+            font-size: 14px;
         }
 
         .vigenere-table td {
-            width: 22px;
-            height: 22px;
+            width: 26px;
+            height: 26px;
             text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.2s;
@@ -227,29 +249,29 @@
         }
 
         .vigenere-table .highlight-row {
-            background: rgba(255, 99, 71, 0.15) !important;
+            background: rgba(255, 99, 71, 0.2) !important;
         }
 
         .vigenere-table .highlight-col {
-            background: rgba(0, 217, 255, 0.15) !important;
+            background: rgba(0, 217, 255, 0.2) !important;
         }
 
         .vigenere-table .intersection {
             background: linear-gradient(135deg, #ffd700, #ffaa00) !important;
             color: #000 !important;
             font-weight: bold;
-            font-size: 14px;
-            transform: scale(1.1);
+            font-size: 16px;
+            transform: scale(1.15);
             box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
 
         .vigenere-table .active-row-header {
-            background: rgba(255, 99, 71, 0.4) !important;
+            background: rgba(255, 99, 71, 0.5) !important;
             color: #fff !important;
         }
 
         .vigenere-table .active-col-header {
-            background: rgba(0, 217, 255, 0.4) !important;
+            background: rgba(0, 217, 255, 0.5) !important;
             color: #fff !important;
         }
 
@@ -257,9 +279,9 @@
         .explanation {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 12px;
-            padding: 20px;
+            padding: 16px 20px;
             text-align: center;
-            font-size: 16px;
+            font-size: 15px;
             color: #ccc;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
@@ -283,6 +305,13 @@
             color: #ffd700;
             font-weight: bold;
         }
+
+        /* 步进提示 */
+        .step-hint {
+            color: #9b59b6;
+            font-size: 13px;
+            margin-top: 8px;
+        }
     </style>
 </head>
 <body>
@@ -300,24 +329,25 @@
                     <input type="text" id="key" value="KEY" maxlength="10" placeholder="输入密钥">
                 </div>
                 <div class="btn-group">
-                    <button class="btn-start" id="startBtn">开始加密</button>
+                    <button class="btn-auto" id="autoBtn">自动演示</button>
+                    <button class="btn-step" id="stepBtn">单步执行</button>
                     <button class="btn-reset" id="resetBtn">重置</button>
                 </div>
             </div>
         </div>
 
         <div class="display-section">
-            <div class="char-display">
-                <span class="char-display-label">明文:</span>
-                <div id="plaintextDisplay"></div>
+            <div class="char-row">
+                <span class="char-row-label">明文:</span>
+                <div class="char-boxes" id="plaintextDisplay"></div>
             </div>
-            <div class="char-display">
-                <span class="char-display-label">密钥:</span>
-                <div id="keyDisplay"></div>
+            <div class="char-row">
+                <span class="char-row-label">密钥:</span>
+                <div class="char-boxes" id="keyDisplay"></div>
             </div>
-            <div class="char-display">
-                <span class="char-display-label">密文:</span>
-                <div id="cipherDisplay"></div>
+            <div class="char-row">
+                <span class="char-row-label">密文:</span>
+                <div class="char-boxes" id="cipherDisplay"></div>
             </div>
         </div>
 
@@ -326,7 +356,7 @@
         </div>
 
         <div class="explanation" id="explanation">
-            点击「开始加密」查看维吉尼亚密码的加密过程
+            点击「自动演示」查看完整加密过程，或点击「单步执行」逐步查看
         </div>
     </div>
 
@@ -336,7 +366,8 @@
         // DOM 元素
         const plaintextInput = document.getElementById('plaintext');
         const keyInput = document.getElementById('key');
-        const startBtn = document.getElementById('startBtn');
+        const autoBtn = document.getElementById('autoBtn');
+        const stepBtn = document.getElementById('stepBtn');
         const resetBtn = document.getElementById('resetBtn');
         const plaintextDisplay = document.getElementById('plaintextDisplay');
         const keyDisplay = document.getElementById('keyDisplay');
@@ -346,6 +377,10 @@
 
         let isAnimating = false;
         let animationStopped = false;
+        let stepMode = false;
+        let currentStep = 0;
+        let currentSubStep = 0; // 0: 高亮字符, 1: 高亮行列, 2: 显示交点, 3: 添加密文
+        let stepResolve = null;
 
         // 初始化
         function init() {
@@ -355,7 +390,8 @@
             // 事件监听
             plaintextInput.addEventListener('input', handleInput);
             keyInput.addEventListener('input', handleInput);
-            startBtn.addEventListener('click', startEncryption);
+            autoBtn.addEventListener('click', () => startEncryption(false));
+            stepBtn.addEventListener('click', handleStepClick);
             resetBtn.addEventListener('click', reset);
         }
 
@@ -421,10 +457,31 @@
                     keyDisplay.appendChild(box);
                 }
             }
+
+            // 显示密文占位符
+            for (let i = 0; i < plaintext.length; i++) {
+                const box = document.createElement('div');
+                box.className = 'char-box placeholder';
+                box.id = `c-${i}`;
+                box.textContent = '?';
+                cipherDisplay.appendChild(box);
+            }
+        }
+
+        // 处理单步点击
+        function handleStepClick() {
+            if (!isAnimating) {
+                // 开始单步模式
+                startEncryption(true);
+            } else if (stepMode && stepResolve) {
+                // 继续下一步
+                stepResolve();
+                stepResolve = null;
+            }
         }
 
         // 开始加密动画
-        async function startEncryption() {
+        async function startEncryption(isStepMode) {
             const plaintext = plaintextInput.value;
             const key = keyInput.value;
 
@@ -435,15 +492,26 @@
 
             isAnimating = true;
             animationStopped = false;
-            startBtn.disabled = true;
+            stepMode = isStepMode;
+            currentStep = 0;
+            currentSubStep = 0;
+
+            autoBtn.disabled = true;
             plaintextInput.disabled = true;
             keyInput.disabled = true;
 
-            // 清空密文显示
-            cipherDisplay.innerHTML = '';
+            if (stepMode) {
+                stepBtn.textContent = '下一步';
+            } else {
+                stepBtn.disabled = true;
+            }
+
+            // 重置显示
+            updateDisplays();
 
             for (let i = 0; i < plaintext.length; i++) {
                 if (animationStopped) break;
+                currentStep = i;
 
                 const pChar = plaintext[i];
                 const kChar = key[i % key.length];
@@ -452,32 +520,39 @@
                 const cIndex = (pIndex + kIndex) % 26;
                 const cChar = ALPHABET[cIndex];
 
-                // 步骤1: 高亮当前字符
-                showExplanation(`<span class="step">第 ${i + 1} 步:</span> 明文 <span class="highlight-p">'${pChar}'</span> + 密钥 <span class="highlight-k">'${kChar}'</span>`);
+                // 子步骤1: 高亮当前字符
+                currentSubStep = 0;
+                showExplanation(`<span class="step">第 ${i + 1} 步:</span> 取明文 <span class="highlight-p">'${pChar}'</span> 和密钥 <span class="highlight-k">'${kChar}'</span>` +
+                    (stepMode ? '<div class="step-hint">点击「下一步」继续</div>' : ''));
                 highlightCurrentChars(i);
-                await delay(600);
+                await waitForNext(500);
 
                 if (animationStopped) break;
 
-                // 步骤2: 高亮表格行列
-                showExplanation(`在表中找到: 行 <span class="highlight-k">'${kChar}'</span> 与 列 <span class="highlight-p">'${pChar}'</span> 的交点`);
+                // 子步骤2: 高亮表格行列
+                currentSubStep = 1;
+                showExplanation(`在表中找到: 密钥行 <span class="highlight-k">'${kChar}'</span> 与明文列 <span class="highlight-p">'${pChar}'</span>` +
+                    (stepMode ? '<div class="step-hint">点击「下一步」继续</div>' : ''));
                 highlightTableRowCol(kIndex, pIndex);
-                await delay(800);
+                await waitForNext(600);
 
                 if (animationStopped) break;
 
-                // 步骤3: 高亮交点
-                showExplanation(`交点字符为: <span class="highlight-c">'${cChar}'</span>`);
+                // 子步骤3: 高亮交点
+                currentSubStep = 2;
+                showExplanation(`行列交点的字符为: <span class="highlight-c">'${cChar}'</span>` +
+                    (stepMode ? '<div class="step-hint">点击「下一步」继续</div>' : ''));
                 highlightIntersection(kIndex, pIndex);
-                await delay(800);
+                await waitForNext(600);
 
                 if (animationStopped) break;
 
-                // 步骤4: 添加密文字符
-                addCipherChar(i, cChar);
-                await delay(400);
+                // 子步骤4: 添加密文字符
+                currentSubStep = 3;
+                setCipherChar(i, cChar);
+                await waitForNext(300);
 
-                // 清理高亮
+                // 清理高亮，准备下一轮
                 clearHighlights();
                 markCharDone(i);
             }
@@ -488,9 +563,23 @@
             }
 
             isAnimating = false;
-            startBtn.disabled = false;
+            stepMode = false;
+            autoBtn.disabled = false;
+            stepBtn.disabled = false;
+            stepBtn.textContent = '单步执行';
             plaintextInput.disabled = false;
             keyInput.disabled = false;
+        }
+
+        // 等待下一步（自动模式延时，单步模式等待点击）
+        function waitForNext(autoDelay) {
+            if (stepMode) {
+                return new Promise(resolve => {
+                    stepResolve = resolve;
+                });
+            } else {
+                return delay(autoDelay);
+            }
         }
 
         // 加密函数
@@ -562,21 +651,17 @@
             });
         }
 
-        // 添加密文字符
-        function addCipherChar(index, char) {
-            const box = document.createElement('div');
-            box.className = 'char-box cipher';
-            box.textContent = char;
-            box.style.opacity = '0';
-            box.style.transform = 'scale(0.5)';
-            cipherDisplay.appendChild(box);
-
-            // 动画效果
-            requestAnimationFrame(() => {
-                box.style.transition = 'all 0.3s ease-out';
-                box.style.opacity = '1';
-                box.style.transform = 'scale(1)';
-            });
+        // 设置密文字符
+        function setCipherChar(index, char) {
+            const box = document.getElementById(`c-${index}`);
+            if (box) {
+                box.className = 'char-box cipher';
+                box.textContent = char;
+                box.style.transform = 'scale(1.2)';
+                setTimeout(() => {
+                    box.style.transform = 'scale(1)';
+                }, 200);
+            }
         }
 
         // 显示说明
@@ -587,14 +672,24 @@
         // 重置
         function reset() {
             animationStopped = true;
+            if (stepResolve) {
+                stepResolve();
+                stepResolve = null;
+            }
             isAnimating = false;
-            startBtn.disabled = false;
+            stepMode = false;
+            currentStep = 0;
+            currentSubStep = 0;
+
+            autoBtn.disabled = false;
+            stepBtn.disabled = false;
+            stepBtn.textContent = '单步执行';
             plaintextInput.disabled = false;
             keyInput.disabled = false;
 
             clearHighlights();
             updateDisplays();
-            showExplanation('点击「开始加密」查看维吉尼亚密码的加密过程');
+            showExplanation('点击「自动演示」查看完整加密过程，或点击「单步执行」逐步查看');
         }
 
         // 延迟函数
